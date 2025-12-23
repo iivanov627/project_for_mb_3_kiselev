@@ -22,6 +22,17 @@ public class BeeAndBear {
             for (Bee b : bees) b.interrupt();
         }
 
+        // Ждем завершения всех пчел
+        for (Bee b : bees) {
+            try {
+                b.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Выводим статистику сбора и потребления меда
+        pot.printStatistics();
         System.out.println("end");
     }
 }
