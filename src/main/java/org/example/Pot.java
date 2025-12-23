@@ -6,6 +6,9 @@ class Pot {
     private final int maxRounds;
     private int eatenRounds = 0;
     private boolean finished = false;
+    // Статистика сбора и потребления меда (Honey Statistics Tracker)
+    private long totalHoneyCollected = 0;  // Общее количество собранного меда
+    private long totalHoneyEaten = 0;      // Общее количество съеденного меда
 
 
     public Pot(int capacity, int maxRounds) {
@@ -32,6 +35,7 @@ class Pot {
         if (finished) return false;
 
         current++;
+        totalHoneyCollected++;  // Увеличиваем счетчик собранного меда
         System.out.printf("Пчела %d принесла глоток. Горшок: %d/%d\n", beeId, current, capacity);
 
 
@@ -59,6 +63,7 @@ class Pot {
         if (finished) return false;
 
         System.out.printf("Медведь проснулся и ест весь мед (%d глотков).\n", current);
+        totalHoneyEaten += current;  // Добавляем к общему количеству съеденного меда
         current = 0;
         eatenRounds++;
 
@@ -77,5 +82,26 @@ class Pot {
 
     public synchronized boolean isFinished() {
         return finished;
+    }
+
+    // Методы для получения статистики
+    public synchronized long getTotalHoneyCollected() {
+        return totalHoneyCollected;
+    }
+
+    public synchronized long getTotalHoneyEaten() {
+        return totalHoneyEaten;
+    }
+
+    public synchronized void printStatistics() {
+        System.out.println("\n========== СТАТИСТИКА СБОРА И ПОТРЕБЛЕНИЯ МЕДА ==========");
+        System.out.printf("Всего собрано меда пчелами: %d глотков\n", totalHoneyCollected);
+        System.out.printf("Всего съедено меда медведем: %d глотков\n", totalHoneyEaten);
+        System.out.printf("Количество циклов (просыпаний медведя): %d\n", eatenRounds);
+        if (eatenRounds > 0) {
+            System.out.printf("Среднее количество меда за цикл: %.2f глотков\n", 
+                (double) totalHoneyEaten / eatenRounds);
+        }
+        System.out.println("========================================================\n");
     }
 }
